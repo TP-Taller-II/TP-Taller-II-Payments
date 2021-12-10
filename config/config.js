@@ -7,7 +7,7 @@ const { deployContract, MockProvider } = require('ethereum-waffle');
 const deployerMnemonic = process.env.MNEMONIC;
 const infuraApiKey = process.env.INFURA_API_KEY;
 
-const env = process.env.NODE_ENV.trim() || 'dev';
+const env = (process.env.NODE_ENV || 'dev').trim();
 
 const tether_abi = [
 	"function transfer(address to, uint256 amount) returns (bool)",
