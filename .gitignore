@@ -104,4 +104,9 @@ dist
 .tern-port
 
 # IDE stuff
-.vs\*
+.vs/*
+
+# Ethereum stuff
+artifacts/
+cache/
+typechain/
