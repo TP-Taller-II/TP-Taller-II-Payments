@@ -16,6 +16,7 @@ contract CoursesPayout is Ownable {
 
     mapping(bytes32 => Course) public courses;
     uint public balance;
+    uint public available_balance;
 
     function NewCourse(bytes32 course_id, uint256 date, bytes32 password) external onlyOwner {
         require(courses[course_id].last_available == 0, "Course already exists.");
@@ -25,11 +26,20 @@ contract CoursesPayout is Ownable {
         courses[course_id] = new_course;
     }
 
+    function DeleteCourse(bytes32 course_id, bytes32 password) external onlyOwner {
+        bytes32 hashed_pass = keccak256(abi.encode(course_id, password));
+        require(courses[course_id].last_available != 0, "Course doesn't exists.");
+        require(hashed_pass == courses[course_id].key, "Wrong Password.");
+        
+        courses[course_id] = Course(0, 0, 0, 0);
+    }
+
     function Deposit(bytes32 course_id, uint amount) external onlyOwner {
         require(courses[course_id].last_available != 0, "Course doesn't exist.");
         while (courses[course_id].last_available + 31 days < block.timestamp) {
             courses[course_id].last_available = courses[course_id].last_available + 31 days;
             courses[course_id].outgoing_balance += courses[course_id].incoming_balance;
+            available_balance += courses[course_id].incoming_balance;
             courses[course_id].incoming_balance = 0;
         }
         
@@ -38,9 +48,10 @@ contract CoursesPayout is Ownable {
 
         courses[course_id].incoming_balance += amount;
         balance += amount + modulo;
+        available_balance += modulo;
     }
 
-    function Extract(bytes32 course_id, uint password) external {
+    function ExtractCourse(bytes32 course_id, uint password) external {
         bytes32 hashed_pass = keccak256(abi.encode(course_id, password));
         require(courses[course_id].last_available != 0, "Course doesn't exist.");
         require(hashed_pass == courses[course_id].key, "Wrong Password.");
@@ -51,6 +62,14 @@ contract CoursesPayout is Ownable {
 
         usdt.transfer(msg.sender, courses[course_id].outgoing_balance);
         courses[course_id].outgoing_balance = 0;
+    }
+
+    function Extract(address to, uint amount) external onlyOwner {
+        require(available_balance >= amount, "We don't have enough funds");
+
+        IERC20 usdt = IERC20(address(0xD92E713d051C37EbB2561803a3b5FBAbc4962431 ));
+
+        usdt.transfer(to, amount);
     }
 
     function Refund(bytes32 course_id, uint amount, address user) external onlyOwner {
@@ -65,6 +84,7 @@ contract CoursesPayout is Ownable {
 
         courses[course_id].incoming_balance -= amount;
         balance -= amount + modulo;
+        available_balance -= modulo;
     }
 
     // Data Getting
@@ -88,6 +108,7 @@ contract CoursesPayout is Ownable {
         require(date != 0, "Date can't be 0.");
         courses[course_id].last_available = date;
         courses[course_id].outgoing_balance += courses[course_id].incoming_balance;
+        available_balance += courses[course_id].incoming_balance;
         courses[course_id].incoming_balance = 0;
     }
 }

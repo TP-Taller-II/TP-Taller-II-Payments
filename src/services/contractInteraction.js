@@ -20,6 +20,15 @@ const create_course = async (course_id, password) => {
 	);
 }
 
+const delete_course = async (course_id, password) => {
+	var options = { gasPrice: 1000000000, gasLimit: 85000, value: 0 };
+	return (await contract()).DeleteCourse(
+		ethers.utils.formatBytes32String(course_id),
+		ethers.utils.formatBytes32String(password),
+		options
+	);
+}
+
 const deposit = async (course_id, amount) => {
 	var options = { gasPrice: 1000000000, gasLimit: 85000, value: 0 };
 	return (await contract()).Deposit(ethers.utils.formatBytes32String(course_id), amount, options);
@@ -30,9 +39,16 @@ const refund = async (course_id, amount, user_adress) => {
 	return (await contract()).Refund(ethers.utils.formatBytes32String(course_id), amount, user_adress, options);
 }
 
+const extract = async (to, amount) => {
+	var options = { gasPrice: 1000000000, gasLimit: 85000, value: 0 };
+	return (await contract()).extract(to, amount, options);
+}
+
 module.exports = {
 	transfer_tether,
 	create_course,
+	delete_course,
 	deposit,
 	refund,
+	extract,
 }

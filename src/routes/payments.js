@@ -15,9 +15,11 @@ router.use(morgan('dev'));
 router.get('/getContract', payments.getContract);
 router.get('/getTierPrices', payments.getTierPrices);
 router.post('/paySubscription', payments.paySubscription);
+router.post('/deleteSubscription', payments.deleteSubscription);
 router.post('/courseSubscription', payments.courseSubscription);
 router.get('/getSubscription/:id', payments.getSubscription);
 router.post('/createCourse', payments.createCourse);
+router.post('/deleteCourse', payments.deleteCourse);
 router.get('/getCourse/:id', payments.getCourse);
 router.post('/refund', payments.refund);
 

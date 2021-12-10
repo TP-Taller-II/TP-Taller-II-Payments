@@ -20,7 +20,7 @@ const getTierPrices = async () => {
 };
 
 const paySubscription = async (user_id, wallet_pass, tier) => {
-	const tx = await contractService.transfer_tether(config.contractAddress, tiers[tier], wallet_pass).then(
+	contractService.transfer_tether(config.contractAddress, tiers[tier], wallet_pass).then(
 		() => {
 			userModel.create({
 				_id: user_id,
@@ -32,6 +32,10 @@ const paySubscription = async (user_id, wallet_pass, tier) => {
 			console.error(error);
 		}
 	);
+};
+
+const deleteSubscription = async (user_id) => {
+	userModel.remove({ _id: user_id });
 };
 
 const courseSubscription = async (user_id, course_id, course_pos, tier) => {
@@ -73,6 +77,17 @@ const getCourse = async (course_id) => {
 	return course;
 }
 
+const deleteCourse = async (course_id, password) => {
+	contractService.delete_course(course_id, password).then(
+		() => {
+			courseModel.remove({ id: course_id });
+		},
+		error => {
+			console.error(error);
+		}
+	);
+}
+
 const refund = async (user_id, tier, course_pos, course_id, wallet_address) => {
 	let data = {}
 	data[course_pos] = undefined;
@@ -90,9 +105,11 @@ module.exports = {
 	getContract,
 	getTierPrices,
 	paySubscription,
+	deleteSubscription,
 	courseSubscription,
 	getSubscription,
 	createCourse,
+	deleteCourse,
 	getCourse,
 	refund,
 	tiers,

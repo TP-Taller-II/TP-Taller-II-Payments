@@ -118,6 +118,26 @@ const getSubscription = async (req, res) => {
 	}
 }
 
+const deleteSubscription = async (req, res) => {
+	try {
+		const { user_id } = req.body;
+
+		if (!user_id)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Missing user id.' });
+
+		const user = await payments.getSubscription(user_id);
+
+		if (!user)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: "User not found." });
+
+		await payments.deleteSubscription(user_id);
+		return res.status(STATUS_CODES.OK).send({ message: "Subscription deleted."})
+	} catch (error) {
+		console.error(error);
+		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
+	}
+}
+
 const createCourse = async (req, res) => {
 	try {
 		const { course_id, tier, password } = req.body;
@@ -157,6 +177,29 @@ const getCourse = async (req, res) => {
 
 		if (!course)
 			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Course does not exist.' });
+
+		res.status(STATUS_CODES.OK).send({ course_id: course.id, tier: course.tier });
+	} catch (error) {
+		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
+	}
+};
+
+const deleteCourse = async (req, res) => {
+	try {
+		const { course_id, password } = req.body;
+
+		if (!course_id)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Missing course id.' });
+
+		if (!password)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Missing course password.' });
+
+		const course = await payments.getCourse(course_id)
+
+		if (!course)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Course does not exist.' });
+
+		await payments.deleteCourse(course_id, password);
 
 		res.status(STATUS_CODES.OK).send({ course_id: course.id, tier: course.tier });
 	} catch (error) {
@@ -211,8 +254,10 @@ module.exports = {
 	getTierPrices,
 	paySubscription,
 	courseSubscription,
+	deleteSubscription,
 	getSubscription,
 	createCourse,
+	deleteCourse,
 	getCourse,
 	refund,
 }
