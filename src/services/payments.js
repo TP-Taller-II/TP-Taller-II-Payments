@@ -8,8 +8,8 @@ const courseSchema = require("../schemas/courseSchema");
 
 const tiers = { 1: 6, 2: 12, 3: 18 };
 
-const userModel = new Model('users', userSchema);
-const courseModel = new Model('courses', courseSchema);
+const userModel = new Model('subscriptions', userSchema);
+const courseModel = new Model('contractcourses', courseSchema);
 
 const getContract = async () => {
 	return config.contractAddress;
