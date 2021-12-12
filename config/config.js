@@ -46,6 +46,11 @@ const dev = {
 	contractAddress: require(`../deployments/rinkeby/CoursesPayout.json`).address,
 	contractAbi: require(`../deployments/rinkeby/CoursesPayout.json`).abi,
 	network: "rinkeby",
+	db: {
+		protocol: 'mongodb+srv',
+		host: `ubademy-g2:${process.env.MONGO_DB_PASS}@auth-server.i7qbi.mongodb.net`,
+		opts: 'retryWrites=true&w=majority',
+	},
 };
 
 const test = {
