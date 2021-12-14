@@ -12,6 +12,11 @@ jobs:
           node-version: 12.x
       - name: Install dependencies
         run: npm install --production=false
+      - name: create env file
+        run: |
+          touch .env
+          echo INFURA_API_KEY =${{ secrets.INFURA_API_KEY }} >> .env
+          echo MNEMONIC =${{ secrets.MNEMONIC }} >> .env
       - name: Run Tests
         run: npm run test-ci
       - name: Export Coverage
