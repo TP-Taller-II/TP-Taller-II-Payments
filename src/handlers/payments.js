@@ -6,7 +6,7 @@ const payments = require('../services/payments');
 
 const getContract = async (req, res) => {
 	try {
-		res.status(STATUS_CODES.OK).send({ adress: await payments.getContract() });
+		res.status(STATUS_CODES.OK).send({ address: await payments.getContract() });
 	} catch (error) {
 		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
 	}
@@ -46,6 +46,51 @@ const paySubscription = async (req, res) => {
 		res.status(STATUS_CODES.OK).send({ message: "Payment sent to the chain." });
 	} catch (error) {
 		console.log(error);
+		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
+	}
+};
+
+const getSubscription = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		if (!id)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Missing user id.' });
+
+		const user = await payments.getSubscription(id);
+
+		if (!user)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: "User not found." });
+
+		return res.status(STATUS_CODES.OK).send({
+			subscription_date: user.subscription_date,
+			tier: user.tier,
+			course_1: user.course_1 || "Subscription open",
+			course_2: user.course_2 || "Subscription open",
+			course_3: user.course_3 || "Subscription open",
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
+	}
+};
+
+const deleteSubscription = async (req, res) => {
+	try {
+		const { user_id } = req.body;
+
+		if (!user_id)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Missing user id.' });
+
+		const user = await payments.getSubscription(user_id);
+
+		if (!user)
+			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: "User not found." });
+
+		await payments.deleteSubscription(user_id);
+		return res.status(STATUS_CODES.OK).send({ message: "Subscription deleted." })
+	} catch (error) {
+		console.error(error);
 		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
 	}
 };
@@ -92,51 +137,6 @@ const courseSubscription = async (req, res) => {
 		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
 	}
 };
-
-const getSubscription = async (req, res) => {
-	try {
-		const { id } = req.params;
-
-		if (!id)
-			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Missing user id.' });
-
-		const user = await payments.getSubscription(id);
-
-		if (!user)
-			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: "User not found." });
-
-		return res.status(STATUS_CODES.OK).send({
-			subscription_date: user.subscription_date,
-			tier: user.tier,
-			course_1: user.course_1 || "Subscription open",
-			course_2: user.course_2 || "Subscription open",
-			course_3: user.course_3 || "Subscription open",
-		});
-	} catch (error) {
-		console.error(error);
-		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
-	}
-}
-
-const deleteSubscription = async (req, res) => {
-	try {
-		const { user_id } = req.body;
-
-		if (!user_id)
-			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Missing user id.' });
-
-		const user = await payments.getSubscription(user_id);
-
-		if (!user)
-			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: "User not found." });
-
-		await payments.deleteSubscription(user_id);
-		return res.status(STATUS_CODES.OK).send({ message: "Subscription deleted."})
-	} catch (error) {
-		console.error(error);
-		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
-	}
-}
 
 const createCourse = async (req, res) => {
 	try {

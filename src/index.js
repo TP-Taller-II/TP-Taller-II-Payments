@@ -2,7 +2,6 @@
 
 const Express = require('express');
 // const swaggerUi = require('swagger-ui-express');
-const config = require('../config/config');
 const cors = require('cors');
 const routes = require('./routes/payments');
 require('./startup/startup-mongo')();

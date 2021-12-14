@@ -14,9 +14,12 @@ const tether_abi = [
 ];
 
 let provider = new MockProvider();
-let owner_wallet = new MockProvider().getWallets()[0];
+let owner_wallet = provider.getWallets()[0];
 let contract = async () => { return deployContract(owner_wallet, require('../deployments/rinkeby/CoursesPayout.json')) };
-let usdt = async () => { return deployContract(owner_wallet, require('../deployments/test/BasicToken.json'), [1000]) };
+let usdt = async (private_key) => {
+	const wallet = new ethers.Wallet(private_key, provider);
+	return deployContract(wallet, require('../deployments/test/BasicToken.json'), [1000])
+};
 
 
 if (env != "test") {
@@ -29,7 +32,10 @@ if (env != "test") {
 			owner_wallet
 		);
 	};
-	usdt = async () => { return new ethers.Contract("0xD92E713d051C37EbB2561803a3b5FBAbc4962431", tether_abi, owner_wallet); };
+	usdt = async (private_key) => {
+		const wallet = new ethers.Wallet(private_key, provider);
+		return new ethers.Contract("0xD92E713d051C37EbB2561803a3b5FBAbc4962431", tether_abi, wallet);
+	};
 }
 
 const defaultConfig = {
@@ -39,6 +45,7 @@ const defaultConfig = {
 	owner_wallet: owner_wallet,
 	contract: contract,
 	usdt: usdt,
+	tether_abi: tether_abi,
 };
 
 const dev = {

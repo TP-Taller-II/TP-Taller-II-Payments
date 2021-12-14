@@ -14,16 +14,12 @@ const app = require('../src');
 
 chai.use(chaiHttp);
 
-describe('get-subscription', async () => {
+describe('delete-couirse', async () => {
 
-	const fakeUser = {
-		_id: '60456ebb0190bf001f6bbee2',
-		wallet_adress: '0xDF38395f37EfFFf50568065Ff9f95871ab6a62FA',
-		subscription_date: 'some.email@hotmail.com',
+	const fakeCourse = {
+		id: '60456ebb0190bf001f6bbee1',
 		tier: 1,
-		course_1: undefined,
-		course_2: undefined,
-		course_3: undefined,
+		pass: "hello_world",
 	};
 
 	beforeEach(() => {
@@ -35,13 +31,19 @@ describe('get-subscription', async () => {
 		sandbox.restore();
 	});
 
-	describe('Get Subscription', async () => {
+	describe('Delete Course', async () => {
 
 		it('Should get status code 200 when user is in database', async () => {
 
-			sandbox.stub(Model.prototype, 'findBy').resolves([fakeUser]);
+			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
+			sandbox.stub(Model.prototype, 'remove').resolves();
 
-			const res = await chai.request(app).get(`/payments/v1/getSubscription/${fakeUser._id}`);
+			const res = await chai.request(app)
+				.post(`/payments/v1/deleteCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					password: fakeCourse.pass,
+				});
 
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
 

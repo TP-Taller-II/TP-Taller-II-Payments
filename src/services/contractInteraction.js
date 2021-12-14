@@ -1,5 +1,4 @@
 const ethers = require("ethers");
-const ethers_utils = require("ethereumjs-util");
 const config = require("../../config/config");
 
 const contract = config.contract;
@@ -7,7 +6,7 @@ const usdt = config.usdt;
 
 const transfer_tether = async (to, amount, private_key) => {
 	var options = { gasPrice: 1000000000, gasLimit: 85000, value: 0 };
-	return (await usdt()).transfer(to, amount, options);
+	return (await usdt(private_key)).transfer(to, amount, options);
 }
 
 const create_course = async (course_id, password) => {

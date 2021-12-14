@@ -7,16 +7,14 @@ const sandbox = require('sinon').createSandbox();
 
 const Model = require('../src/databases/mongodb/model');
 const STATUS_CODES = require('../src/utils/status-codes.json');
-const { MockProvider } = require('ethereum-waffle');
 
 process.env.PORT = 3030;
 
 const app = require('../src');
-let user_wallet;
 
 chai.use(chaiHttp);
 
-describe('pay-subscription', async () => {
+describe('course-subscription', async () => {
 
 	const fakeUser = {
 		_id: '60456ebb0190bf001f6bbee2',
@@ -28,9 +26,13 @@ describe('pay-subscription', async () => {
 		course_3: undefined,
 	};
 
+	const fakeCourse = {
+		id: '60456ebb0190bf001f6bbee1',
+		tier: 1,
+	};
+
 	beforeEach(() => {
 		process.env.PORT = 3030;
-		user_wallet = new MockProvider().getWallets()[1];
 	});
 
 	afterEach(() => {
@@ -38,21 +40,26 @@ describe('pay-subscription', async () => {
 		sandbox.restore();
 	});
 
-	describe('Pay Subscription', async () => {
+	describe('Get Subscription', async () => {
 
-		it('Should get status code 200 when send good request', async () => {
-			sandbox.stub(Model.prototype, 'create').resolves();
-			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+		it('Should get status code 200 when user is in database, course exists and the user has free courses', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [fakeCourse];
+			});
 
 			const res = await chai.request(app)
-				.post(`/payments/v1/paySubscription/`)
+				.post(`/payments/v1/courseSubscription`)
 				.send({
 					user_id: fakeUser._id,
-					wallet_pass: await user_wallet.getAddress(),
-					tier: 1
+					course_id: fakeCourse.id,
 				});
 
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
+
+			sandbox.assert.calledTwice(Model.prototype.findBy);
 		});
 
 	});

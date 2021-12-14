@@ -38,6 +38,12 @@ const deleteSubscription = async (user_id) => {
 	userModel.remove({ _id: user_id });
 };
 
+const getSubscription = async (user_id) => {
+	const [user] = await userModel.findBy('_id', user_id);
+
+	return user;
+}
+
 const courseSubscription = async (user_id, course_id, course_pos, tier) => {
 	let data = {}
 	data[course_pos] = course_id;
@@ -50,12 +56,6 @@ const courseSubscription = async (user_id, course_id, course_pos, tier) => {
 		}
 	);
 };
-
-const getSubscription = async (user_id) => {
-	const [user] = await userModel.findBy('_id', user_id);
-
-	return user;
-}
 
 const createCourse = async (course_id, tier, password) => {
 	contractService.create_course(course_id, password).then(
