@@ -62,5 +62,75 @@ describe('course-subscription', async () => {
 			sandbox.assert.calledTwice(Model.prototype.findBy);
 		});
 
+		it('Should get status code 400 when user_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [fakeCourse];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/courseSubscription`)
+				.send({
+					course_id: fakeCourse.id,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when user_id is not in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [];
+				return [fakeCourse];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/courseSubscription`)
+				.send({
+					user_id: fakeUser._id,
+					course_id: fakeCourse.id,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when course_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [fakeCourse];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/courseSubscription`)
+				.send({
+					user_id: fakeUser._id,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when course_id is not in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/courseSubscription`)
+				.send({
+					user_id: fakeUser._id,
+					course_id: fakeCourse.id,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
 	});
 });

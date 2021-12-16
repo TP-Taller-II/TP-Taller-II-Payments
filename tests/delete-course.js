@@ -33,7 +33,7 @@ describe('delete-couirse', async () => {
 
 	describe('Delete Course', async () => {
 
-		it('Should get status code 200 when user is in database', async () => {
+		it('Should get status code 200 when course is in database', async () => {
 
 			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
 			sandbox.stub(Model.prototype, 'remove').resolves();
@@ -48,6 +48,51 @@ describe('delete-couirse', async () => {
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
 
 			sandbox.assert.calledOnce(Model.prototype.findBy);
+		});
+
+		it('Should get status code 400 when course is not in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+			sandbox.stub(Model.prototype, 'remove').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/deleteCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					password: fakeCourse.pass,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+
+			sandbox.assert.calledOnce(Model.prototype.findBy);
+		});
+
+		it('Should get status code 400 when course_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
+			sandbox.stub(Model.prototype, 'remove').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/deleteCourse`)
+				.send({
+					password: fakeCourse.pass,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when password is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
+			sandbox.stub(Model.prototype, 'remove').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/deleteCourse`)
+				.send({
+					course_id: fakeCourse.id,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
 		});
 
 	});

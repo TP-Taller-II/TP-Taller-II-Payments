@@ -51,5 +51,68 @@ describe('create-course', async () => {
 			sandbox.assert.calledOnce(Model.prototype.findBy);
 		});
 
+		it('Should get status code 400 when course already exists', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
+			sandbox.stub(Model.prototype, 'create').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/createCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					tier: fakeCourse.tier,
+					password: fakeCourse.pass,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+
+			sandbox.assert.calledOnce(Model.prototype.findBy);
+		});
+
+		it('Should get status code 400 when course_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+			sandbox.stub(Model.prototype, 'create').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/createCourse`)
+				.send({
+					tier: fakeCourse.tier,
+					password: fakeCourse.pass,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when tier is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+			sandbox.stub(Model.prototype, 'create').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/createCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					password: fakeCourse.pass,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when password is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+			sandbox.stub(Model.prototype, 'create').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/createCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					tier: fakeCourse.tier,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
 	});
 });
