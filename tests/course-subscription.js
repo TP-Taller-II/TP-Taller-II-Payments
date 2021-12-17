@@ -40,7 +40,7 @@ describe('course-subscription', async () => {
 		sandbox.restore();
 	});
 
-	describe('Get Subscription', async () => {
+	describe('Course Subscription', async () => {
 
 		it('Should get status code 200 when user is in database, course exists and the user has free courses', async () => {
 

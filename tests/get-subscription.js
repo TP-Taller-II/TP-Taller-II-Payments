@@ -48,5 +48,16 @@ describe('get-subscription', async () => {
 			sandbox.assert.calledOnce(Model.prototype.findBy);
 		});
 
+		it('Should get status code 400 when user is not in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+
+			const res = await chai.request(app).get(`/payments/v1/getSubscription/${fakeUser._id}`);
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+
+			sandbox.assert.calledOnce(Model.prototype.findBy);
+		});
+
 	});
 });

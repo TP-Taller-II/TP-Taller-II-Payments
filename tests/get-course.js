@@ -33,7 +33,7 @@ describe('get-course', async () => {
 
 	describe('Get Course', async () => {
 
-		it('Should get status code 200 when user is in database', async () => {
+		it('Should get status code 200 when course is in database', async () => {
 
 			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
 
@@ -43,6 +43,26 @@ describe('get-course', async () => {
 			assert.deepStrictEqual(res.body['tier'], fakeCourse.tier);
 
 			sandbox.assert.calledOnce(Model.prototype.findBy);
+		});
+
+		it('Should get status code 400 when course is no in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+
+			const res = await chai.request(app).get(`/payments/v1/getCourse/${fakeCourse.id}`);
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+
+			sandbox.assert.calledOnce(Model.prototype.findBy);
+		});
+
+		it('Should get status code 404 when course_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
+
+			const res = await chai.request(app).get(`/payments/v1/getCourse/`);
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.NOT_FOUND);
 		});
 
 	});

@@ -74,5 +74,97 @@ describe('refund', async () => {
 			sandbox.assert.calledTwice(Model.prototype.findBy);
 		});
 
+		it('Should get status code 400 when user_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [fakeCourse];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/refund`)
+				.send({
+					course_id: fakeCourse.id,
+					wallet_address: fakeUser.wallet_adress
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when course_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [fakeCourse];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/refund`)
+				.send({
+					user_id: fakeUser._id,
+					wallet_address: fakeUser.wallet_adress
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when wallet_address is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [fakeCourse];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/refund`)
+				.send({
+					course_id: fakeCourse.id,
+					user_id: fakeUser._id,
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when user is not in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [];
+				return [fakeCourse];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/refund`)
+				.send({
+					course_id: fakeCourse.id,
+					user_id: fakeUser._id,
+					wallet_address: fakeUser.wallet_adress
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when course is not in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [];
+			});
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/refund`)
+				.send({
+					course_id: fakeCourse.id,
+					user_id: fakeUser._id,
+					wallet_address: fakeUser.wallet_adress
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
 	});
 });

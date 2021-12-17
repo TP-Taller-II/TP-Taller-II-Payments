@@ -55,5 +55,62 @@ describe('pay-subscription', async () => {
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
 		});
 
+		it('Should get status code 400 when user_id is missing', async () => {
+			sandbox.stub(Model.prototype, 'create').resolves();
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/paySubscription/`)
+				.send({
+					wallet_pass: await user_wallet.getAddress(),
+					tier: 1
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when wallet_pass is missing', async () => {
+			sandbox.stub(Model.prototype, 'create').resolves();
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/paySubscription/`)
+				.send({
+					user_id: fakeUser._id,
+					tier: 1
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when tier is missing', async () => {
+			sandbox.stub(Model.prototype, 'create').resolves();
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/paySubscription/`)
+				.send({
+					user_id: fakeUser._id,
+					wallet_pass: await user_wallet.getAddress(),
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when user already exists', async () => {
+			sandbox.stub(Model.prototype, 'create').resolves();
+			sandbox.stub(Model.prototype, 'findBy').resolves([fakeUser]);
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/paySubscription/`)
+				.send({
+					user_id: fakeUser._id,
+					wallet_pass: await user_wallet.getAddress(),
+					tier: 1
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
 	});
 });

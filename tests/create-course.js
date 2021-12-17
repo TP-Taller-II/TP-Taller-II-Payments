@@ -31,7 +31,7 @@ describe('create-course', async () => {
 		sandbox.restore();
 	});
 
-	describe('Get Subscription', async () => {
+	describe('Create Course', async () => {
 
 		it('Should get status code 200 when data is correct', async () => {
 

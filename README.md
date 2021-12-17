@@ -4,7 +4,7 @@
 [![Tests](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/tests.yml/badge.svg)](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/tests.yml)
 [![Linters](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/linters.yml/badge.svg)](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/linters.yml)
 
-## 緾髆o correr el servicio?
+## 驴C贸mo correr el servicio?
 
 Si es la primera vez o luego de haber implementado cambios:
 
@@ -26,7 +26,7 @@ y para bajar el servicio:
 docker-compose build
 ```
 
-## :heavy_check_mark: 緾髆o correr los tests?
+## :heavy_check_mark: 驴C贸mo correr los tests?
 
 Para correr los test se debe correr el siguiente comando desde la consola:
 
@@ -46,9 +46,9 @@ Para correr el test de coverage:
 docker-compose exec app npm run coverage -- -w
 ```
 
-## Documentaci髇 de API
+## Documentaci贸n de API
 
-Para ver la documentaci髇 de las API desde un browser teniendo el servicio levantado se debe acceder a: [http://localhost:8080/api-docs/#](http://localhost:8080/api-docs/#)
+Para ver la documentaci贸n de las API desde un browser teniendo el servicio levantado se debe acceder a: [http://localhost:8080/api-docs/#](http://localhost:8080/api-docs/#)
 
 ## Heroku
-*Esta aplicaci髇 esta deployada en https://ubademy-g2-payments.herokuapp.com*
+*Esta aplicaci贸n esta deployada en https://ubademy-g2-payments.herokuapp.com*

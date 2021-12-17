@@ -35,7 +35,7 @@ describe('delete-subscription', async () => {
 		sandbox.restore();
 	});
 
-	describe('Get Subscription', async () => {
+	describe('Delete Subscription', async () => {
 
 		it('Should get status code 200 when user is in database', async () => {
 
@@ -52,6 +52,35 @@ describe('delete-subscription', async () => {
 
 			sandbox.assert.calledOnce(Model.prototype.findBy);
 			sandbox.assert.calledOnce(Model.prototype.remove);
+		});
+
+		it('Should get status code 400 when user_id is missing', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([fakeUser]);
+			sandbox.stub(Model.prototype, 'remove').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/deleteSubscription`)
+				.send({
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+		});
+
+		it('Should get status code 400 when user is not in database', async () => {
+
+			sandbox.stub(Model.prototype, 'findBy').resolves([]);
+			sandbox.stub(Model.prototype, 'remove').resolves();
+
+			const res = await chai.request(app)
+				.post(`/payments/v1/deleteSubscription`)
+				.send({
+					user_id: fakeUser._id
+				});
+
+			assert.deepStrictEqual(res.status, STATUS_CODES.BAD_REQUEST);
+
+			sandbox.assert.calledOnce(Model.prototype.findBy);
 		});
 
 	});
