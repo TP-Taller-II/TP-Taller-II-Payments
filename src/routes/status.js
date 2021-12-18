@@ -12,6 +12,6 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(morgan('dev'));
 
-router.get('/', status);
+router.get('/status', status);
 
 module.exports = router;
