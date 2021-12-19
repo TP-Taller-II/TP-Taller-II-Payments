@@ -25,7 +25,7 @@ describe('get-contract', async () => {
 		sandbox.restore();
 	});
 
-	describe('Get Subscription', async () => {
+	describe('Get Contract', async () => {
 
 		it('Should get status code 200 always and return contract', async () => {
 			const res = await chai.request(app).get(`/payments/v1/getContract`);

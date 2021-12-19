@@ -14,16 +14,16 @@ module.exports = {
 						type: 'object',
 						description: 'The data of the user that wants to pay the subscription',
 						properties: {
-							_id: {
-								$ref: '#/components/schemas/Subscription/properties/_id',
+							user_id: {
+								$ref: '#/components/schemas/Subscription/properties/_id'
 							},
-							id: {
-								$ref: '#/components/schemas/Course/properties/id',
-							},
-						},
-					},
-				},
-			},
+							course_id: {
+								$ref: '#/components/schemas/Course/properties/id'
+							}
+						}
+					}
+				}
+			}	
 		},
 		responses: {
 			200: {

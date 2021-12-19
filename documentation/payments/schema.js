@@ -7,7 +7,6 @@ module.exports = {
 			_id: {
 				type: 'string',
 				description: 'The user\'s ID',
-				readOnly: true,
 				required: true,
 				example: '60456ebb0190bf001f6bbee2',
 			},
@@ -42,7 +41,6 @@ module.exports = {
 			id: {
 				type: 'string',
 				description: 'The user\'s ID',
-				readOnly: true,
 				required: true,
 				example: '60456ebb0190bf001f6bbee2',
 			},
