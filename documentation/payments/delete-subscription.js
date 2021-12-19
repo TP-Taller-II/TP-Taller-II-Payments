@@ -2,11 +2,11 @@
 
 module.exports = {
 	post: {
-		tags: ['Subscription'],
-		description: 'Pay Subscription',
-		operationId: 'paySubscription',
+		tags: ['Course'],
+		description: 'Delete Course',
+		operationId: 'deleteCourse',
 		requestBody: {
-			description: 'The data of the user that wants to pay the subscription',
+			description: 'The id of the course we want to delete',
 			required: true,
 			content: {
 				'application/json': {
@@ -14,18 +14,13 @@ module.exports = {
 						type: 'object',
 						description: 'The data of the user that wants to pay the subscription',
 						properties: {
-							user_id: {
-								$ref: '#/components/schemas/Subscription/properties/_id'
+							course_id: {
+								$ref: '#/components/schemas/Course/properties/id'
 							},
-							wallet_pass: {
+							password: {
 								type: 'string',
-								description: 'The private key of user\'s wallet',
+								description: 'The password used to get the money out of the courses',
 								example: '0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f'
-							},
-							tier: {
-								type: 'integer',
-								description: 'The tier of the subscription',
-								example: 1
 							}
 						}
 					}
@@ -34,7 +29,7 @@ module.exports = {
 		},
 		responses: {
 			200: {
-				description: 'The payment has been sent to the chain',
+				description: 'Course deletion was sent to the chain',
 			},
 			401: {
 				description: 'Unauthorized',

@@ -2,30 +2,30 @@
 
 module.exports = {
 	post: {
-		tags: ['Subscription'],
-		description: 'Pay Subscription',
-		operationId: 'paySubscription',
+		tags: ['Course'],
+		description: 'Create Course',
+		operationId: 'createCourse',
 		requestBody: {
-			description: 'The data of the user that wants to pay the subscription',
+			description: 'The data of the course we want to create',
 			required: true,
 			content: {
 				'application/json': {
 					schema: {
 						type: 'object',
-						description: 'The data of the user that wants to pay the subscription',
+						description: 'The data of the course we want to create',
 						properties: {
-							user_id: {
-								$ref: '#/components/schemas/Subscription/properties/_id'
-							},
-							wallet_pass: {
-								type: 'string',
-								description: 'The private key of user\'s wallet',
-								example: '0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f'
+							course_id: {
+								$ref: '#/components/schemas/Course/properties/id'
 							},
 							tier: {
 								type: 'integer',
-								description: 'The tier of the subscription',
+								description: 'The minimum tier of the subscription required to access the course',
 								example: 1
+							},
+							password: {
+								type: 'string',
+								description: 'The password used to get the money out of the courses',
+								example: '0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f'
 							}
 						}
 					}
@@ -34,7 +34,7 @@ module.exports = {
 		},
 		responses: {
 			200: {
-				description: 'The payment has been sent to the chain',
+				description: 'Course Creation sent to the chain.',
 			},
 			401: {
 				description: 'Unauthorized',

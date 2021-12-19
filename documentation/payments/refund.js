@@ -2,39 +2,37 @@
 
 module.exports = {
 	post: {
-		tags: ['Subscription'],
-		description: 'Pay Subscription',
-		operationId: 'paySubscription',
+		tags: ['Course'],
+		description: 'Refund Course',
+		operationId: 'refundCourse',
 		requestBody: {
-			description: 'The data of the user that wants to pay the subscription',
+			description: 'The user and the course they want to refund',
 			required: true,
 			content: {
 				'application/json': {
 					schema: {
 						type: 'object',
-						description: 'The data of the user that wants to pay the subscription',
+						description: 'The user and the course they want to refund',
 						properties: {
 							user_id: {
 								$ref: '#/components/schemas/Subscription/properties/_id'
 							},
-							wallet_pass: {
+							course_id: {
+								$ref: '#/components/schemas/Course/properties/id'
+							},
+							wallet_address: {
 								type: 'string',
 								description: 'The private key of user\'s wallet',
-								example: '0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f'
+								example: '0x63FaC9201494f0bd17B9892B9fae4d52fe3BD377'
 							},
-							tier: {
-								type: 'integer',
-								description: 'The tier of the subscription',
-								example: 1
-							}
 						}
 					}
 				}
-			}	
+			}
 		},
 		responses: {
 			200: {
-				description: 'The payment has been sent to the chain',
+				description: 'Course deletion was sent to the chain',
 			},
 			401: {
 				description: 'Unauthorized',

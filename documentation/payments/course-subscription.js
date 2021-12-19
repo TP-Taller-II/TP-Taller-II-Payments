@@ -3,10 +3,10 @@
 module.exports = {
 	post: {
 		tags: ['Subscription'],
-		description: 'Pay Subscription',
-		operationId: 'paySubscription',
+		description: 'Subscribe to Course',
+		operationId: 'courseSubscription',
 		requestBody: {
-			description: 'The data of the user that wants to pay the subscription',
+			description: 'The user and the course they want to subscribe to',
 			required: true,
 			content: {
 				'application/json': {
@@ -17,15 +17,8 @@ module.exports = {
 							user_id: {
 								$ref: '#/components/schemas/Subscription/properties/_id'
 							},
-							wallet_pass: {
-								type: 'string',
-								description: 'The private key of user\'s wallet',
-								example: '0x8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f'
-							},
-							tier: {
-								type: 'integer',
-								description: 'The tier of the subscription',
-								example: 1
+							course_id: {
+								$ref: '#/components/schemas/Course/properties/id'
 							}
 						}
 					}
@@ -34,7 +27,7 @@ module.exports = {
 		},
 		responses: {
 			200: {
-				description: 'The payment has been sent to the chain',
+				description: 'The subscription has been sent to the chain',
 			},
 			401: {
 				description: 'Unauthorized',

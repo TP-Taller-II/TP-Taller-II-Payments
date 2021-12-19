@@ -201,7 +201,7 @@ const deleteCourse = async (req, res) => {
 
 		await payments.deleteCourse(course_id, password);
 
-		res.status(STATUS_CODES.OK).send({ course_id: course.id, tier: course.tier });
+		res.status(STATUS_CODES.OK).send({ message: 'Course deletion was sent to the chain.' });
 	} catch (error) {
 		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
 	}
