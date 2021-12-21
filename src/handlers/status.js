@@ -8,7 +8,7 @@ const getContract = async (req, res) => {
 	res.status(STATUS_CODES.OK).send({
 		status: 'Online',
 		creationDate: starting_date.toFixed(),
-		description: "A short description"
+		description: 'Microservicio de pagos, utilizando un smart contract y tether.'
 	});
 };
 
