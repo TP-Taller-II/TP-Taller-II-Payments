@@ -1,8 +1,9 @@
-'use strict';
+ 'use strict';
 
 require('dotenv').config()
 const ethers = require('ethers');
-const { deployContract, MockProvider } = require('ethereum-waffle');
+
+const test_config = require('./testConfig');
 
 const deployerMnemonic = process.env.MNEMONIC;
 const infuraApiKey = process.env.INFURA_API_KEY;
@@ -13,14 +14,10 @@ const tether_abi = [
 	"function transfer(address to, uint256 amount) returns (bool)",
 ];
 
-let provider = new MockProvider();
-let owner_wallet = provider.getWallets()[0];
-let contract = async () => { return deployContract(owner_wallet, require('../deployments/rinkeby/CoursesPayout.json')) };
-let usdt = async (private_key) => {
-	const wallet = new ethers.Wallet(private_key, provider);
-	return deployContract(wallet, require('../deployments/test/BasicToken.json'), [1000])
-};
-
+let provider = test_config.provider;
+let owner_wallet = test_config.owner_wallet;
+let contract = test_config.contract;
+let usdt = test_config.usdt;
 
 if (env != "test") {
 	provider = new ethers.providers.InfuraProvider('rinkeby', infuraApiKey);

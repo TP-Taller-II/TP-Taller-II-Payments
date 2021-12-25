@@ -14,13 +14,14 @@ const app = require('../src');
 
 chai.use(chaiHttp);
 
-describe('delete-couirse', async () => {
+describe('delete-course', async () => {
 
 	const fakeCourse = {
-		id: '60456ebb0190bf001f6bbee1',
+		id: '60456ebb0190bf001f6bbee3',
 		tier: 1,
 		pass: "hello_world",
 	};
+
 
 	beforeEach(() => {
 		process.env.PORT = 3030;
@@ -35,10 +36,22 @@ describe('delete-couirse', async () => {
 
 		it('Should get status code 200 when course is in database', async () => {
 
-			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
 			sandbox.stub(Model.prototype, 'remove').resolves();
+			let stubby = sandbox.stub(Model.prototype, 'findBy');
+			stubby.onCall(0).resolves([]);
+			stubby.onCall(1).resolves([fakeCourse]);
+			
+			let res = await chai.request(app)
+				.post(`/payments/v1/createCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					tier: fakeCourse.tier,
+					password: fakeCourse.pass,
+				});
 
-			const res = await chai.request(app)
+			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
+
+			res = await chai.request(app)
 				.post(`/payments/v1/deleteCourse`)
 				.send({
 					course_id: fakeCourse.id,
@@ -46,8 +59,6 @@ describe('delete-couirse', async () => {
 				});
 
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
-
-			sandbox.assert.calledOnce(Model.prototype.findBy);
 		});
 
 		it('Should get status code 400 when course is not in database', async () => {

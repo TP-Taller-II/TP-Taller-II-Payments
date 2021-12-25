@@ -58,17 +58,16 @@ const courseSubscription = async (user_id, course_id, course_pos, tier) => {
 };
 
 const createCourse = async (course_id, tier, password) => {
-	contractService.create_course(course_id, password).then(
-		() => {
-			courseModel.create({
-				id: course_id,
-				tier: tier,
-			});
-		},
-		error => {
-			console.error(error);
-		}
-	);
+	try {
+		await contractService.create_course(course_id, password);
+		courseModel.create({
+			id: course_id,
+			tier: tier,
+		});
+	}
+	catch (error) {
+		console.error(error);
+	};
 };
 
 const getCourse = async (course_id) => {
@@ -113,4 +112,6 @@ module.exports = {
 	getCourse,
 	refund,
 	tiers,
+	outgoing_balance: contractService.outgoing_balance,
+	incoming_balance: contractService.incoming_balance,
 }

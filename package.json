@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "heroku:start": "node src/index.js",
+    "heroku:start": "export NODE_OPTIONS=--openssl-legacy-provider && node src/index.js",
     "lint": "eslint ./src ./tests",
     "lint-init": "eslint --init",
-    "test": "export NODE_ENV=test && mocha --exit -R nyan --recursive tests/",
+    "test": "export NODE_ENV=test && mocha --exit -R nyan --recursive tests/ --openssl-legacy-provider",
     "test-win": "SET NODE_ENV=test && mocha --timeout 15000 --exit -R nyan --recursive tests/",
     "test-ci": "mocha --exit --recursive tests/",
     "coverage": "nyc npm test",

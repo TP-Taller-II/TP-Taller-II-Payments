@@ -2,6 +2,7 @@
 
 const STATUS_CODES = require('../utils/status-codes.json');
 const payments = require('../services/payments');
+const { outgoing_balance } = require('../services/contractInteraction');
 
 
 const getContract = async (req, res) => {
@@ -178,7 +179,12 @@ const getCourse = async (req, res) => {
 		if (!course)
 			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Course does not exist.' });
 
-		res.status(STATUS_CODES.OK).send({ course_id: course.id, tier: course.tier });
+		res.status(STATUS_CODES.OK).send({ 
+			course_id: course.id, 
+			tier: course.tier,
+			outgoing_balance: await payments.outgoing_balance(id),
+			incoming_balance: await payments.incoming_balance(id),
+		});
 	} catch (error) {
 		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
 	}
