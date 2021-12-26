@@ -43,6 +43,16 @@ const extract = async (to, amount) => {
 	return (await contract()).extract(to, amount, options);
 }
 
+const incoming_balance = async (course_id) => {
+	var options = { gasPrice: 1000000000, gasLimit: 85000, value: 0 };
+	return (await (await contract()).getCourseIncomingBalance(ethers.utils.formatBytes32String(course_id))).toNumber();
+}
+
+const outgoing_balance = async (course_id) => {
+	var options = { gasPrice: 1000000000, gasLimit: 85000, value: 0 };
+	return (await (await contract()).getCourseOutgoingBalance(ethers.utils.formatBytes32String(course_id))).toNumber();
+}
+
 module.exports = {
 	transfer_tether,
 	create_course,
@@ -50,4 +60,6 @@ module.exports = {
 	deposit,
 	refund,
 	extract,
+	incoming_balance,
+	outgoing_balance
 }

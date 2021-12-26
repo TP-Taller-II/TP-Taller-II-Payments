@@ -35,14 +35,25 @@ describe('get-course', async () => {
 
 		it('Should get status code 200 when course is in database', async () => {
 
-			sandbox.stub(Model.prototype, 'findBy').resolves([fakeCourse]);
+			sandbox.stub(Model.prototype, 'create').resolves();
+			let stubby = sandbox.stub(Model.prototype, 'findBy');
+			stubby.onCall(0).resolves([]);
+			stubby.onCall(1).resolves([fakeCourse]);
+			
+			let res = await chai.request(app)
+				.post(`/payments/v1/createCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					tier: fakeCourse.tier,
+					password: fakeCourse.pass,
+				});
 
-			const res = await chai.request(app).get(`/payments/v1/getCourse/${fakeCourse.id}`);
+			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
+			
+			res = await chai.request(app).get(`/payments/v1/getCourse/${fakeCourse.id}`);
 
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
 			assert.deepStrictEqual(res.body['tier'], fakeCourse.tier);
-
-			sandbox.assert.calledOnce(Model.prototype.findBy);
 		});
 
 		it('Should get status code 400 when course is no in database', async () => {

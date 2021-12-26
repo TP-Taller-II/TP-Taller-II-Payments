@@ -1,5 +1,7 @@
 'use strict';
 
+const { incoming_balance, outgoing_balance } = require("../../src/services/contractInteraction");
+
 module.exports = {
 	get: {
 		tags: ['Course'],
@@ -21,7 +23,26 @@ module.exports = {
 				content: {
 					'application/json': {
 						schema: {
-							$ref: '#/components/schemas/Course',
+							type: 'object',
+							description: 'The course information',
+							properties: {
+								course_id: {
+									$ref: '#/components/schemas/Course/properties/id'
+								},
+								tier: {
+									$ref: '#/components/schemas/Course/properties/tier'
+								},
+								incoming_balance: {
+									type: 'integer',
+									description: 'The amount of money that a course has received this month, in millionth parts of tether.',
+									example: '10'
+								},
+								outgoing_balance: {
+									type: 'integer',
+									description: 'The amount of money that a course has received previous months that is available to take out, in millionth parts of tether.',
+									example: '18'
+								}
+							}
 						},
 					},
 				},

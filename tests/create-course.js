@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 describe('create-course', async () => {
 
 	const fakeCourse = {
-		id: '60456ebb0190bf001f6bbee1',
+		id: '60456ebb0190bf001f6bbee2',
 		tier: 1,
 		pass: "hello_world",
 	};
@@ -31,10 +31,11 @@ describe('create-course', async () => {
 		sandbox.restore();
 	});
 
-	describe('Create Course', async () => {
+	describe('Create Course', async function () {
+		this.timeout(5000); 
 
 		it('Should get status code 200 when data is correct', async () => {
-
+			
 			sandbox.stub(Model.prototype, 'findBy').resolves([]);
 			sandbox.stub(Model.prototype, 'create').resolves();
 

@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 describe('course-subscription', async () => {
 
 	const fakeUser = {
-		_id: '60456ebb0190bf001f6bbee2',
+		_id: '60456ebb0190bf001f6bbee9',
 		wallet_adress: '0xDF38395f37EfFFf50568065Ff9f95871ab6a62FA',
 		subscription_date: 'some.email@hotmail.com',
 		tier: 1,
@@ -25,10 +25,11 @@ describe('course-subscription', async () => {
 		course_2: undefined,
 		course_3: undefined,
 	};
-
+	
 	const fakeCourse = {
-		id: '60456ebb0190bf001f6bbee1',
+		id: '60456ebb0190bf001f6bbee0',
 		tier: 1,
+		pass: "hello_world",
 	};
 
 	beforeEach(() => {
@@ -40,17 +41,35 @@ describe('course-subscription', async () => {
 		sandbox.restore();
 	});
 
-	describe('Course Subscription', async () => {
+	describe('Course Subscription', async function () {
+		this.timeout(5000)
 
 		it('Should get status code 200 when user is in database, course exists and the user has free courses', async () => {
 
-			sandbox.stub(Model.prototype, 'findBy').callsFake((field, input) => {
+			let stubby = sandbox.stub(Model.prototype, 'findBy');
+			stubby.onCall(0).resolves([]);
+			stubby.onCall(1).callsFake((field, input) => {
 				if (field == '_id')
 					return [fakeUser];
 				return [fakeCourse];
 			});
+			stubby.onCall(2).callsFake((field, input) => {
+				if (field == '_id')
+					return [fakeUser];
+				return [fakeCourse];
+			});
+			
+			let res = await chai.request(app)
+				.post(`/payments/v1/createCourse`)
+				.send({
+					course_id: fakeCourse.id,
+					tier: fakeCourse.tier,
+					password: fakeCourse.pass,
+				});
 
-			const res = await chai.request(app)
+			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
+
+			res = await chai.request(app)
 				.post(`/payments/v1/courseSubscription`)
 				.send({
 					user_id: fakeUser._id,
@@ -58,8 +77,6 @@ describe('course-subscription', async () => {
 				});
 
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
-
-			sandbox.assert.calledTwice(Model.prototype.findBy);
 		});
 
 		it('Should get status code 400 when user_id is missing', async () => {
