@@ -3,7 +3,7 @@
 const STATUS_CODES = require('../utils/status-codes.json');
 const payments = require('../services/payments');
 const { outgoing_balance } = require('../services/contractInteraction');
-
+const logger = require("../helpers/logger");
 
 const getContract = async (req, res) => {
 	try {
@@ -46,7 +46,7 @@ const paySubscription = async (req, res) => {
 
 		res.status(STATUS_CODES.OK).send({ message: "Payment sent to the chain." });
 	} catch (error) {
-		console.log(error);
+		logger.error(error);
 		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
 	}
 };
@@ -71,7 +71,7 @@ const getSubscription = async (req, res) => {
 			course_3: user.course_3 || "Subscription open",
 		});
 	} catch (error) {
-		console.error(error);
+		logger.error(error);
 		return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ message: error.message });
 	}
 };
@@ -179,8 +179,8 @@ const getCourse = async (req, res) => {
 		if (!course)
 			return res.status(STATUS_CODES.BAD_REQUEST).send({ message: 'Course does not exist.' });
 
-		res.status(STATUS_CODES.OK).send({ 
-			course_id: course.id, 
+		res.status(STATUS_CODES.OK).send({
+			course_id: course.id,
 			tier: course.tier,
 			outgoing_balance: await payments.outgoing_balance(id),
 			incoming_balance: await payments.incoming_balance(id),
