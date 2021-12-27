@@ -1,5 +1,7 @@
 'use strict';
 
+// This line must come before importing any instrumented module.
+require('dd-trace').init();
 const Express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');

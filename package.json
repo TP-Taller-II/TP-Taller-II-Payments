@@ -1,5 +1,5 @@
 {
-  "name": "payments-server",
+  "name": "payments",
   "version": "1.0.0",
   "description": "Payment Microservice Server",
   "main": "index.js",
@@ -75,6 +75,7 @@
     "body-parser": "^1.19.0",
     "codecov": "^3.8.3",
     "cors": "^2.8.5",
+    "dd-trace": "^1.6.0",
     "dotenv": "8.2.0",
     "ethereum-waffle": "3.2.0",
     "ethers": "^5.0.24",
@@ -83,6 +84,7 @@
     "hardhat": "2.0.6",
     "hardhat-deploy": "0.7.4",
     "hardhat-deploy-ethers": "0.3.0-beta.7",
+    "hot-shots": "^9.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "lodash.get": "^4.4.2",
