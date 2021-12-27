@@ -105,8 +105,10 @@ dist
 
 # IDE stuff
 .vs/*
+.idea
 
 # Ethereum stuff
 artifacts/
 cache/
 typechain/
+
