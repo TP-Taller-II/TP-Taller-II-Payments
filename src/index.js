@@ -8,7 +8,7 @@ const cors = require('cors');
 const status = require('./routes/status');
 const routes = require('./routes/payments');
 require('./startup/startup-mongo')();
-
+const logger = require("./helpers/logger");
 const options = require('../documentation/options');
 
 const app = new Express();
@@ -22,6 +22,6 @@ app.use('/payments/v1', routes);
 const port = process.env.PORT || 8080;
 const external_port = process.env.APP_EXTERNAL_PORT || 5000;
 
-app.listen(port, () => console.log(`App listening on port ${port} and external port ${external_port}`));
+app.listen(port, () => logger.info(`App listening on port ${port} and external port ${external_port}`));
 
 module.exports = app;

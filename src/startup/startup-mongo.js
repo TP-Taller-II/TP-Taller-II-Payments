@@ -1,14 +1,15 @@
 'use strict';
 
-console.log('Starting Mongo');
 const mongoose = require('mongoose');
 const config = require('../../config/config');
+const logger = require('../helpers/logger');
 
-console.log('Reading Config');
+logger.info('Starting Mongo');
+logger.info('Reading Config');
 const { protocol, host, name, opts } = config.db;
 const uri = `${protocol}://${host}/${name}${opts ? `?${opts}` : ''}`;
 
-console.log(`Mongo uri: ${uri}`);
+logger.info(`Mongo uri: ${uri}`);
 
 module.exports = () => {
 	mongoose.connect(uri, {
@@ -18,6 +19,6 @@ module.exports = () => {
 		useCreateIndex: true,
 		autoIndex: true,
 	})
-		.then(() => console.log('Connected to database'))
-		.catch(e => console.log(e));
+		.then(() => logger.info('Connected to database'))
+		.catch(e => logger.error(e));
 };

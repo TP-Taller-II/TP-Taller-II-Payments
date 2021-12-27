@@ -1,11 +1,12 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const logger = require("../../helpers/logger");
 
 module.exports = class Model {
 
 	constructor(name, schema) {
-		console.log(`Model name: ${name}, schema: ${schema} - constructor`);
+		logger.info(`Model name: ${name}, schema: ${schema} - constructor`);
 		this.model = mongoose.model(name, schema);
 	}
 
