@@ -17,7 +17,7 @@ let usdt;
 let contract = async () => { return test_contract; }
 const options = { gasPrice: 10000000000, gasLimit: 2000000, value: 0 };
 
-describe('contract', async () => {
+describe('contract', async function () {
 	this.timeout(10000);
 
 	const fakeCourse = {
