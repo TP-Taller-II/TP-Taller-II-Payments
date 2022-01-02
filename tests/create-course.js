@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 describe('create-course', async () => {
 
 	const fakeCourse = {
-		id: '60456ebb0190bf001f6bbee2',
+		id: '60456ebb0190bf001f6bbee4',
 		tier: 1,
 		pass: "hello_world",
 	};

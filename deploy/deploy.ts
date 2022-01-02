@@ -8,9 +8,9 @@ const deployFunc: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deploy } = deployments;
 
   const deployResult = await deploy("CoursesPayout", {
-    from: deployer,
-    gasLimit: 4000000,
-    args: [],
+        from: deployer,
+        gasLimit: 4000000,
+        args: ['0xD92E713d051C37EbB2561803a3b5FBAbc4962431'],
   });
     console.log(`CoursesPayout deployed at ${deployResult.address}`);
   return hre.network.live; // prevents re execution on live networks

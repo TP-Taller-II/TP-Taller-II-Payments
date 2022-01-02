@@ -42,7 +42,7 @@ describe('course-subscription', async () => {
 	});
 
 	describe('Course Subscription', async function () {
-		this.timeout(5000)
+		this.timeout(10000)
 
 		it('Should get status code 200 when user is in database, course exists and the user has free courses', async () => {
 
@@ -58,6 +58,7 @@ describe('course-subscription', async () => {
 					return [fakeUser];
 				return [fakeCourse];
 			});
+			sandbox.stub(Model.prototype, 'create').resolves();
 			
 			let res = await chai.request(app)
 				.post(`/payments/v1/createCourse`)
@@ -68,6 +69,7 @@ describe('course-subscription', async () => {
 				});
 
 			assert.deepStrictEqual(res.status, STATUS_CODES.OK);
+			sandbox.assert.calledOnce(Model.prototype.create);
 
 			res = await chai.request(app)
 				.post(`/payments/v1/courseSubscription`)

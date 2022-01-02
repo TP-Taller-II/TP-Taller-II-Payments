@@ -17,6 +17,11 @@ contract CoursesPayout is Ownable {
     mapping(bytes32 => Course) public courses;
     uint public balance;
     uint public available_balance;
+    IERC20 usdt;
+
+    constructor(IERC20 _tokenContract) public {
+        usdt = _tokenContract;
+    }
 
     function NewCourse(bytes32 course_id, uint256 date, bytes32 password) external onlyOwner {
         require(courses[course_id].last_available == 0, "Course already exists.");
@@ -55,10 +60,6 @@ contract CoursesPayout is Ownable {
         bytes32 hashed_pass = keccak256(abi.encode(course_id, password));
         require(courses[course_id].last_available != 0, "Course doesn't exist.");
         require(hashed_pass == courses[course_id].key, "Wrong Password.");
-        require(courses[course_id].last_available > block.timestamp, "Too early to extract money.");
-
-
-        IERC20 usdt = IERC20(address(0xD92E713d051C37EbB2561803a3b5FBAbc4962431 ));
 
         usdt.transfer(msg.sender, courses[course_id].outgoing_balance);
         courses[course_id].outgoing_balance = 0;
@@ -67,23 +68,19 @@ contract CoursesPayout is Ownable {
     function Extract(address to, uint amount) external onlyOwner {
         require(available_balance >= amount, "We don't have enough funds");
 
-        IERC20 usdt = IERC20(address(0xD92E713d051C37EbB2561803a3b5FBAbc4962431 ));
-
         usdt.transfer(to, amount);
     }
 
     function Refund(bytes32 course_id, uint amount, address user) external onlyOwner {
         require(courses[course_id].last_available != 0, "Course doesn't exist.");
+        uint modulo = amount % 2;
+        uint sub_amount = amount / 2;
         
-        IERC20 usdt = IERC20(address(0xD92E713d051C37EbB2561803a3b5FBAbc4962431 ));
-
+        require(courses[course_id].incoming_balance >= sub_amount, "Course doesn't have enough to refund.");
         usdt.transfer(user, amount);
 
-        uint modulo = amount % 2;
-        amount = amount / 2;
-
-        courses[course_id].incoming_balance -= amount;
-        balance -= amount + modulo;
+        courses[course_id].incoming_balance -= sub_amount;
+        balance -= sub_amount + modulo;
         available_balance -= modulo;
     }
 
