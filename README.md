@@ -1,5 +1,7 @@
 # Ubademy G2 Payments
 
+Repositorio del microservicio de payments, encargado de ofrecer endpoints restful al contrato que administra el sistema de pagos de la aplicacion ubademy. Utiliza solidity y hardhat para deployear el contrato en la red, y ethers para interactura con este.
+
 [![codecov](https://codecov.io/gh/TP-Taller-II/TP-Taller-II-Payments/branch/master/graph/badge.svg?token=OtaojxpKyj)](https://codecov.io/gh/TP-Taller-II/TP-Taller-II-Payments)
 [![Tests](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/tests.yml/badge.svg)](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/tests.yml)
 [![Linters](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/linters.yml/badge.svg)](https://github.com/TP-Taller-II/TP-Taller-II-Payments/actions/workflows/linters.yml)
