@@ -20,18 +20,18 @@ const getTierPrices = async () => {
 };
 
 const paySubscription = async (user_id, wallet_pass, tier) => {
-	contractService.transfer_tether(config.contractAddress, tiers[tier], wallet_pass).then(
-		() => {
-			userModel.create({
-				_id: user_id,
-				subscription_date: Date.now(),
-				tier: tier,
-			});
-		},
-		error => {
-			console.error(error);
-		}
-	);
+	try {
+		let value = await contractService.transfer_tether(config.contractAddress, tiers[tier], wallet_pass);
+		value.wait(1);
+		userModel.create({
+			_id: user_id,
+			subscription_date: Date.now(),
+			tier: tier,
+		});
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
 
 const deleteSubscription = async (user_id) => {
